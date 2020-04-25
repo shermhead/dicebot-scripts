@@ -1,5 +1,5 @@
 chance    = 45
-base      = 0.00000001
+base      = 0.0000001
 nextbet   = base
 streakcnt = 0
 resetseed()
@@ -147,9 +147,11 @@ end
 --init and fixes 
 
 if initcnt<90 then 
-    print("░▒▓█ %"..math.floor(initcnt/90*100).. "█▓▒░") 
+    print("░▒▓█ Populating array % "..math.floor(initcnt/90*100).. " █▓▒░") 
         chance  = 45 
         nextbet =0.00000001
     end
 
 end
+
+    
