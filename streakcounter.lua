@@ -3,67 +3,37 @@ base      = 0.0000001
 nextbet   = base
 streakcnt = 0
 resetseed()
-rec      = {0}
-rec10    = {0}
-rec10cnt = 0
-rec25    = {0}
-rec25cnt = 0
-rec33    = {0}
-rec33cnt = 0
-rec50    = {0}
-rec50cnt = 0
-rec66    = {0}
-rec66cnt = 0
-a        = 0
-initcnt  = 0
-
+rec       = {0}
+rec10     = {0}
+rec10cnt  = 0
+rec25     = {0}
+rec25cnt  = 0
+rec33     = {0}
+rec33cnt  = 0
+rec50     = {0}
+rec50cnt  = 0
+rec66     = {0}
+rec66cnt  = 0
+a         = 0
+initcnt   = 0
+mult      = 0
+maxstreak = 1
 --10x function
-  function add10 (t)
+  function add (t)
       local sum = 0
-      for i,v in ipairs(rec10) do
+      for i,v in ipairs(t) do
         sum = sum + v
       end
       return sum
     end
   --5x function
-  function add25 (t)
-      local sum = 0
-      for i,v in ipairs(rec25) do
-        sum = sum + v
-      end
-      return sum
-    end
-  --3x function
-    function add33 (t)
-      local sum = 0
-      for i,v in ipairs(rec33) do
-        sum = sum + v
-      end
-      return sum
-    end
-    --2x function
-    function add50 (t)
-      local sum = 0
-      for i,v in ipairs(rec50) do
-        sum = sum + v
-      end
-      return sum
-    end
-    --1.5x function
-    function add66 (t)
-      local sum = 0
-      for i,v in ipairs(rec66) do
-        sum = sum + v
-      end
-      return sum
-    end
 
 function dobet()
-if win then
+
     chance  = 33
     nextbet = base
     bethigh = true
-end
+mult = 1.55
     initcnt+=1
   
 
@@ -72,10 +42,10 @@ end
         table.insert(rec66,1,"1")
     else table.insert(rec66,1,"0")
     end
-    rec66cnt = ((add66(rec66)/#rec66))    
-    if math.floor(#rec66/rec66cnt)>=103 then 
+    rec66cnt = 33/((add(rec66)/#rec66)*100)    
+    if (rec66cnt)>=maxstreak then 
       --  if win then 
-            chance = 66 bethigh=false end 
+      chance = 66 mult=3.5 bethigh=false end 
             --end
             table.remove(rec66,31)
         --2x routine
@@ -83,10 +53,10 @@ end
             table.insert(rec50,1,"1")
         else table.insert(rec50,1,"0")
     end
-        rec50cnt = ((add50(rec50)/#rec50))
-        if math.floor(#rec50/rec50cnt)>=105 then 
+        rec50cnt = 50/((add(rec50)/#rec50)*100)
+        if (rec50cnt)>=maxstreak then 
             -- if win then 
-                chance = 50 bethigh=false end  
+            chance = 50 mult=2.5 bethigh=false end  
             --end
         table.remove(rec50,51) 
 
@@ -95,10 +65,10 @@ end
         table.insert(rec33,1,"1")
     else table.insert(rec33,1,"0")
     end
-    rec33cnt = ((add33(rec33)/#rec33))
-    if math.floor(#rec33/rec33cnt)>=106 then
+    rec33cnt = 66/((add(rec33)/#rec33)*100)
+    if (rec33cnt)>=maxstreak then
         --  if win then 
-           chance = 33 bethigh=false end 
+        chance = 33 mult=2 bethigh=false end 
            --end
     table.remove(rec33,67)
         
@@ -107,10 +77,10 @@ end
            table.insert(rec25,1,"1")
        else table.insert(rec25,1,"0")
     end
-       rec25cnt = ((add25(rec25)/#rec25))    
-       if math.floor(#rec25/rec25cnt)>=107 then
+       rec25cnt = 75/((add(rec25)/#rec25)*100)    
+       if (rec25cnt)>=maxstreak then
            -- if win then 
-              chance = 25 bethigh=false end 
+           chance = 25 mult=1.5 bethigh=false end 
               --end
        table.remove(rec25,76)
  --10x routine
@@ -118,10 +88,10 @@ end
         table.insert(rec10,1,"1")
     else table.insert(rec10,1,"0")
     end
-    rec10cnt = ((add10(rec10)/#rec10))    
-    if math.floor(#rec10/rec10cnt)>=110 then
+    rec10cnt = 90/((add(rec10)/#rec10)*100)    
+    if rec10cnt>=maxstreak then
         --if win then
-           chance = 10 bethigh=false end 
+        chance = 10 mult=1.2 bethigh=false end 
            --end
         table.remove(rec10,91)     
    
@@ -130,19 +100,17 @@ end
 
 if win then a=0 nextbet=base else
    a       = a-currentprofit 
-   nextbet = (a/math.floor(50/chance))
- 
-   if (chance)==66 then nextbet=previousbet*3 end
+nextbet = previousbet*mult
+   
 end
-
   if nextbet<base then nextbet=base end
 --output
 if initcnt>90 then
-print("░ 1.5x   ░% "..math.floor(#rec66/rec66cnt)..".▓█>")
-print("░ 2.0x   ░% "..math.floor(#rec50/rec50cnt)..".▓█>")
-print("░ 3.0x   ░% "..math.floor(#rec33/rec33cnt)..".▓█>")
-print("░ 5.0x   ░% "..math.floor(#rec25/rec25cnt)..".▓█>")
-print("░ 10.0x ░% "..math.floor(#rec10/rec10cnt)..".▓█>")
+    print("░ 1.5x   ░% "..rec66cnt..".▓█>")
+    print("░ 2.0x   ░% "..rec50cnt..".▓█>")
+    print("░ 3.0x   ░% "..rec33cnt..".▓█>")
+    print("░ 5.0x   ░% "..rec25cnt..".▓█>")
+    print("░ 10.0x ░% "..rec10cnt..".▓█>")
 end
 --init and fixes 
 
@@ -151,7 +119,9 @@ if initcnt<90 then
         chance  = 45 
         nextbet =0.00000001
     end
-
+    nextbet = math.floor(nextbet*10^8)*0.00000001  
 end
+
+    
 
     
